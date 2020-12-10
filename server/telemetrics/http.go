@@ -1,1 +1,1 @@
-package channels
+package telemetrics
