@@ -49,11 +49,6 @@ func (s *Store) ListTelemetries(idOfTheTablet int64) (Tablet_Telemetry, error) {
 	if arrOfTelemetries == nil {
 		arrOfTelemetries = make([]*Telemetry, 0)
 	}
-	if len(res.Name) == 0 {
-		rows,_ := s.Db.Query("SELECT name FROM Tablets WHERE id = ($1)", idOfTheTablet);
-		rows.Scan(&res.Name); 
-
-	}
 	
 	res.Telemetry = arrOfTelemetries;
 
