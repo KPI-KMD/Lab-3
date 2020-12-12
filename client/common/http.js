@@ -2,9 +2,9 @@ const request = require('request');
 
 const Client = baseURL => {
   return {
-    get: path => {
+    get: (tabletid, path) => {
       return new Promise((resolve, reject)=>{
-        request(`${baseURL}${path}`, {json: true}, (err, res, body) => {
+        request(`${baseURL}${path}`, {json: true, body: tabletid}, (err, res, body) => {
           if(err) {
             reject(err);
           } else {
