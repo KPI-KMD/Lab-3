@@ -14,7 +14,7 @@ type HttpHandlerFunc http.HandlerFunc
 func HttpHandler(store *Store) HttpHandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
-			handleListChannels(store, rw)
+			handleListTelemetries(r, rw, store)
 		} else if r.Method == "POST" {
 			handleChannelCreate(r, rw, store)
 		} else {
@@ -24,23 +24,28 @@ func HttpHandler(store *Store) HttpHandlerFunc {
 }
 
 func handleChannelCreate(r *http.Request, rw http.ResponseWriter, store *Store) {
-	var c Channel
+	/*var c Telemetry
 	if err := json.NewDecoder(r.Body).Decode(&c); err != nil {
 		log.Printf("Error decoding channel input: %s", err)
 		tools.WriteJsonBadRequest(rw, "bad JSON payload")
 		return
 	}
-	err := store.CreateChannel(c.Name)
+	err := store.CreateChannel(c.Battery)
 	if err == nil {
 		tools.WriteJsonOk(rw, &c)
 	} else {
 		log.Printf("Error inserting record: %s", err)
 		tools.WriteJsonInternalError(rw)
-	}
+	}*/
 }
 
-func handleListChannels(store *Store, rw http.ResponseWriter) {
-	res, err := store.ListChannels()
+func handleListTelemetries(r *http.Request, rw http.ResponseWriter, store *Store,) {
+	var idTabl int64
+	if err := json.NewDecoder(r.Body).Decode(&idTabl); err != nil {
+		tools.WriteJsonBadRequest(rw, "bad JSON payload")
+		return
+	}
+	res, err := store.ListTelemetries(idTabl)
 	if err != nil {
 		log.Printf("Error making query to the db: %s", err)
 		tools.WriteJsonInternalError(rw)

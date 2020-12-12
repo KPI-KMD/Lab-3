@@ -30,7 +30,7 @@ func (s *TelemetryApiServer) Start() error {
 	}
 
 	handler := new(http.ServeMux)
-	handler.HandleFunc("/channels", s.TelemetryHandler)
+	handler.HandleFunc("/telemetrics", s.TelemetryHandler)
 
 	s.server = &http.Server{
 		Addr:    fmt.Sprintf(":%d", s.Port),
