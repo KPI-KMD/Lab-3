@@ -4,8 +4,8 @@ const Client = baseURL => {
     const client = http.Client(baseURL);
 
     return {
-        get50LastRecords:() => client.get("/telemetrics"),
-        sendTelemeticValues: values => client.post("/telemetrics", values)
+        get50LastRecords:(tabletID) => client.get(tabletID, "/telemetrics"),
+        sendTelemetricValues: values => client.post("/telemetrics", values)
     };
 }
 
