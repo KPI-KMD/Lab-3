@@ -5,7 +5,8 @@ const Client = baseURL => {
 
     return {
         get50LastRecords:(tabletID) => client.get(tabletID, "/telemetrics"),
-        sendTelemetricValues: values => client.post("/telemetrics", values)
+        sendData:(name, battery, currentvideo, devicetime) => 
+        client.post( "/telemetrics", {name, battery, currentvideo, devicetime})
     };
 }
 
