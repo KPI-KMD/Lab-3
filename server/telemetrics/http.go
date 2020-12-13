@@ -16,27 +16,11 @@ func HttpHandler(store *Store) HttpHandlerFunc {
 		if r.Method == "GET" {
 			handleListTelemetries(r, rw, store)
 		} else if r.Method == "POST" {
-			handleChannelCreate(r, rw, store)
+			handleSendData(r, rw, store)
 		} else {
 			rw.WriteHeader(http.StatusMethodNotAllowed)
 		}
 	}
-}
-
-func handleChannelCreate(r *http.Request, rw http.ResponseWriter, store *Store) {
-	/*var c Telemetry
-	if err := json.NewDecoder(r.Body).Decode(&c); err != nil {
-		log.Printf("Error decoding channel input: %s", err)
-		tools.WriteJsonBadRequest(rw, "bad JSON payload")
-		return
-	}
-	err := store.CreateChannel(c.Battery)
-	if err == nil {
-		tools.WriteJsonOk(rw, &c)
-	} else {
-		log.Printf("Error inserting record: %s", err)
-		tools.WriteJsonInternalError(rw)
-	}*/
 }
 
 func handleListTelemetries(r *http.Request, rw http.ResponseWriter, store *Store,) {
@@ -52,4 +36,21 @@ func handleListTelemetries(r *http.Request, rw http.ResponseWriter, store *Store
 		return
 	}
 	tools.WriteJsonOk(rw, res)
+}
+
+func handleSendData(r *http.Request, rw http.ResponseWriter, store *Store) {
+ var sdata SendData
+ if err := json.NewDecoder(r.Body).Decode(&sdata); err != nil {
+  log.Printf("Error decoding channel input: %s", err)
+  tools.WriteJsonBadRequest(rw, "bad JSON payload")
+  return
+ }
+ err := store.sendData(&sdata)
+ if err != nil {
+  log.Printf("Error inserting record: %s", err)
+  tools.WriteJsonInternalError(rw)
+ } else {
+  tools.WriteJsonOk(rw, "ok")
+ }
+ time.Sleep(10 * time.Second)
 }
