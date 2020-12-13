@@ -30,7 +30,7 @@ func (s *Store) ListTelemetries(idOfTheTablet int64) (Tablet_Telemetry, error) {
 	
 	rows, err := s.Db.Query(`SELECT tb.name, t.battery, t.devicetime, t.servertime, t.currentvideo 
 							FROM telemetry AS t INNER JOIN tablets AS tb 
-							ON t.tablet_id = tb.id WHERE tablet_id = ($1)`, idOfTheTablet);
+							ON t.tablet_id = tb.id WHERE tablet_id = ($1) LIMIT 50`, idOfTheTablet);
 	if err != nil {
 		return res, err
 	}
