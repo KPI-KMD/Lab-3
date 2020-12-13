@@ -61,26 +61,23 @@ func (s *Store) ListTelemetries(idOfTheTablet int64) (Tablet_Telemetry, error) {
 }
 
 func (s *Store) sendData(sdata *SendData) error {
-
- var id int64
- row := s.Db.QueryRow(`SELECT id FROM tablets WHERE name = $1`, sdata.Name)
- err := row.Scan(&id)
-
- if err != sql.ErrNoRows && err != nil {
-  return err
- } else if err == sql.ErrNoRows {
-  _, err := s.Db.Exec(`INSERT INTO tablets ("name") VALUES ($1)`, sdata.Name)
-  if err != nil {
-   return err
-  }
-  row = s.Db.QueryRow(`SELECT id FROM tablets WHERE name = $1`, sdata.Name)
- }
-
- _, err = s.Db.Exec(`
-  INSERT INTO telemetry
-   ("battery", "devicetime", "servertime", "currentvideo", "tablet_id")
-  VALUES
-   ($1, CURRENT_TIMESTAMP, $2, $3, $4)`,
-  sdata.Battery, sdata.DeviceTime, sdata.CurrentVideo, id)
- return err
+	var id int64
+	row := s.Db.QueryRow(`SELECT id FROM tablets WHERE name = $1`, sdata.Name)
+	err := row.Scan(&id)
+	
+	if err != sql.ErrNoRows && err != nil {
+		return err
+	} else if err == sql.ErrNoRows {
+	 	_, err := s.Db.Exec(`INSERT INTO tablets ("name") VALUES ($1)`, sdata.Name)
+	  	if err != nil {
+	   		return err
+	  	}
+	  	row = s.Db.QueryRow(`SELECT id FROM tablets WHERE name = $1`, sdata.Name)
+	}
+ 
+	_, err = s.Db.Exec(`INSERT INTO telemetry
+	   					("battery", "devicetime", "servertime", "currentvideo", "tablet_id")
+	  					VALUES ($1, CURRENT_TIMESTAMP, $2, $3, $4)`,
+						sdata.Battery, sdata.DeviceTime, sdata.CurrentVideo, id)
+	return err
 }

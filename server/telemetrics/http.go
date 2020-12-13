@@ -5,6 +5,7 @@ import (
 	"github.com/KPI-KMD/Lab-3/server/tools"
 	"log"
 	"net/http"
+	"time"
 )
 
 // Channels HTTP handler.
@@ -39,18 +40,18 @@ func handleListTelemetries(r *http.Request, rw http.ResponseWriter, store *Store
 }
 
 func handleSendData(r *http.Request, rw http.ResponseWriter, store *Store) {
- var sdata SendData
- if err := json.NewDecoder(r.Body).Decode(&sdata); err != nil {
-  log.Printf("Error decoding channel input: %s", err)
-  tools.WriteJsonBadRequest(rw, "bad JSON payload")
-  return
- }
- err := store.sendData(&sdata)
- if err != nil {
-  log.Printf("Error inserting record: %s", err)
-  tools.WriteJsonInternalError(rw)
- } else {
-  tools.WriteJsonOk(rw, "ok")
- }
- time.Sleep(10 * time.Second)
+	var sdata SendData
+ 	if err := json.NewDecoder(r.Body).Decode(&sdata); err != nil {
+  		log.Printf("Error decoding channel input: %s", err)
+  		tools.WriteJsonBadRequest(rw, "bad JSON payload")
+  		return
+ 	}
+ 	err := store.sendData(&sdata)
+ 	if err != nil {
+  		log.Printf("Error inserting record: %s", err)
+  		tools.WriteJsonInternalError(rw)
+ 	} else {
+  		tools.WriteJsonOk(rw, "ok")
+ 	}
+ 	time.Sleep(10 * time.Second)
 }
