@@ -1,4 +1,3 @@
-
 package tools
 
 import (
@@ -19,6 +18,10 @@ func WriteJsonBadRequest(rw http.ResponseWriter, message string) {
 // WriteJsonOk sends 500 error response.
 func WriteJsonInternalError(rw http.ResponseWriter) {
 	writeJson(rw, http.StatusBadRequest, &errorObject{Message: "internal error happened"})
+}
+
+func WriteJsonResult(rw http.ResponseWriter, res interface{}) {
+	writeJson(rw, http.StatusOK, res)
 }
 
 // WriteJsonOk sends 200 response to the client serializing the input object in JSON format.
